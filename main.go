@@ -95,9 +95,9 @@ func goofify(in []byte) ([]byte, error) {
 	}
 
 	var out []byte
-	tf := rand.Intn(len(operations))
+	randomOp := rand.Intn(len(operations))
 
-	out, err := operations[tf](in)
+	out, err := operations[randomOp](in)
 	if err != nil {
 		return nil, fmt.Errorf("rotating image: %w", err)
 	}
