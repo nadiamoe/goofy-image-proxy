@@ -76,7 +76,9 @@ func run() error {
 
 		out, err := goofify(in.Bytes())
 		if err != nil {
-			return fmt.Errorf("goofifying %q: %w", r.Request.URL.String(), err)
+			log.Printf("Error goofifying %q, returning unmodified: %v", r.Request.URL.String(), err)
+			r.Body = io.NopCloser(bytes.NewBuffer(in.Bytes()))
+			return nil
 		}
 
 		r.Header.Set("content-length", strconv.Itoa(len(out)))
@@ -99,7 +101,7 @@ func goofify(in []byte) ([]byte, error) {
 
 	out, err := operations[randomOp](in)
 	if err != nil {
-		return nil, fmt.Errorf("rotating image: %w", err)
+		return nil, fmt.Errorf("goofifying image: %w", err)
 	}
 
 	return out, nil
