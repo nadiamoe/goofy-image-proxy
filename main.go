@@ -116,6 +116,14 @@ func rotateFunc(angle int) func([]byte) ([]byte, error) {
 
 var operations = []func([]byte) ([]byte, error){
 	func(in []byte) ([]byte, error) {
+		log.Printf("Blurring image")
+		return bimg.NewImage(in).Process(bimg.Options{
+			GaussianBlur: bimg.GaussianBlur{
+				Sigma: 2,
+			},
+		})
+	},
+	func(in []byte) ([]byte, error) {
 		log.Printf("Flopping image")
 		return bimg.NewImage(in).Flop()
 	},
