@@ -110,9 +110,7 @@ func goofify(in []byte) ([]byte, error) {
 func rotateFunc(angle int) func([]byte) ([]byte, error) {
 	return func(in []byte) ([]byte, error) {
 		log.Printf("Rotating image by %d degrees", angle)
-		return bimg.NewImage(in).Process(bimg.Options{
-			Rotate: bimg.Angle(angle),
-		})
+		return bimg.NewImage(in).Rotate(bimg.Angle(angle))
 	}
 }
 
