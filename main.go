@@ -50,11 +50,13 @@ func run() error {
 			return nil
 		}
 
-		if !sem.Start(2 * time.Second) {
+		taken, release := sem.Take(2 * time.Second)
+		defer release()
+
+		if !taken {
 			log.Println("Timeout waiting for semaphore, returning request unmodified")
 			return nil
 		}
-		defer sem.Stop()
 
 		cl, err := strconv.Atoi(r.Header.Get("content-length"))
 		if err != nil {
@@ -113,18 +115,14 @@ var operations = []func([]byte) ([]byte, error){
 
 type semaphore chan struct{}
 
-func (s semaphore) Start(timeout time.Duration) bool {
+func (s semaphore) Take(timeout time.Duration) (bool, func()) {
 	t := time.NewTimer(timeout)
 	defer t.Stop()
 
 	select {
 	case s <- struct{}{}:
-		return true
+		return true, func() { <-s }
 	case <-t.C:
-		return false
+		return false, func() {}
 	}
-}
-
-func (s semaphore) Stop() {
-	<-s
 }
