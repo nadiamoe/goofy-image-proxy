@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -25,6 +26,10 @@ func main() {
 
 func run() error {
 	baseStr := os.Getenv("UPSTREAM_URL")
+	if baseStr == "" {
+		return errors.New("UPSTREAM_URL must be set")
+	}
+
 	base, err := url.Parse(baseStr)
 	if err != nil {
 		return fmt.Errorf("parsing UPSTREAM_URL: %w", err)
@@ -79,6 +84,7 @@ func run() error {
 		return nil
 	}
 
+	log.Printf("Starting HTTP server on %q", addr)
 	return http.ListenAndServe(addr, proxy)
 }
 
