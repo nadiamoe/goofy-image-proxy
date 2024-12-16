@@ -91,15 +91,20 @@ func run() error {
 }
 
 func goofify(in []byte) ([]byte, error) {
-	if t := bimg.DetermineImageType(in); !bimg.IsTypeSupported(t) {
-		log.Printf("Returning image of unsupported type %s unmodified", bimg.ImageTypeName(t))
+	imageType := bimg.DetermineImageType(in)
+	if !bimg.IsTypeSupported(imageType) {
+		log.Printf("Returning image of unsupported type %s unmodified", bimg.ImageTypeName(imageType))
 		return in, nil
 	}
 
-	var out []byte
-	randomOp := rand.Intn(len(operations))
+	localOps := make([]operation, len(operations))
+	copy(localOps, operations)
 
-	out, err := operations[randomOp](in)
+	if imageType == bimg.JPEG {
+		localOps = append(localOps, deepFry)
+	}
+
+	out, err := localOps[rand.Intn(len(localOps))](in)
 	if err != nil {
 		return nil, fmt.Errorf("goofifying image: %w", err)
 	}
@@ -114,6 +119,13 @@ func rotateOp(angle int) operation {
 		log.Printf("Rotating image by %d degrees", angle)
 		return bimg.NewImage(in).Rotate(bimg.Angle(angle))
 	}
+}
+
+func deepFry(in []byte) ([]byte, error) {
+	log.Printf("Deep frying image")
+	return bimg.NewImage(in).Process(bimg.Options{
+		Quality: 5,
+	})
 }
 
 var operations = []operation{
