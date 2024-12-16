@@ -93,8 +93,7 @@ func run() error {
 func goofify(in []byte) ([]byte, error) {
 	imageType := bimg.DetermineImageType(in)
 	if !bimg.IsTypeSupported(imageType) {
-		log.Printf("Returning image of unsupported type %s unmodified", bimg.ImageTypeName(imageType))
-		return in, nil
+		return nil, fmt.Errorf("unsupported image type %s", bimg.ImageTypeName(imageType))
 	}
 
 	localOps := make([]operation, len(operations))
