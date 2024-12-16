@@ -107,14 +107,16 @@ func goofify(in []byte) ([]byte, error) {
 	return out, nil
 }
 
-func rotateFunc(angle int) func([]byte) ([]byte, error) {
+type operation func([]byte) ([]byte, error)
+
+func rotateOp(angle int) operation {
 	return func(in []byte) ([]byte, error) {
 		log.Printf("Rotating image by %d degrees", angle)
 		return bimg.NewImage(in).Rotate(bimg.Angle(angle))
 	}
 }
 
-var operations = []func([]byte) ([]byte, error){
+var operations = []operation{
 	func(in []byte) ([]byte, error) {
 		log.Printf("Blurring image")
 		return bimg.NewImage(in).Process(bimg.Options{
@@ -127,9 +129,9 @@ var operations = []func([]byte) ([]byte, error){
 		log.Printf("Flopping image")
 		return bimg.NewImage(in).Flop()
 	},
-	rotateFunc(90),
-	rotateFunc(180),
-	rotateFunc(270),
+	rotateOp(90),
+	rotateOp(180),
+	rotateOp(270),
 }
 
 type semaphore chan struct{}
