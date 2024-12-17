@@ -123,6 +123,14 @@ func rotateOp(angle int) operation {
 func deepFry(in []byte) ([]byte, error) {
 	log.Printf("Deep frying image")
 	return bimg.NewImage(in).Process(bimg.Options{
+		Sharpen: bimg.Sharpen{
+			Radius: 3,
+			X1:     1.5,
+			Y2:     100,
+			Y3:     100,
+			M1:     5,
+			M2:     10,
+		},
 		Quality: 5,
 	})
 }
