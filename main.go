@@ -81,6 +81,7 @@ func run() error {
 			return nil
 		}
 
+		r.Header.Set("X-Goofy", "1")
 		r.Header.Set("content-length", strconv.Itoa(len(out)))
 		r.Body = io.NopCloser(bytes.NewReader(out))
 		return nil
