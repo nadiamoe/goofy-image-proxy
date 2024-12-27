@@ -51,7 +51,7 @@ func run() error {
 		start := time.Now()
 
 		switch ct := r.Header.Get("content-type"); ct {
-		case "image/jpeg", "image/jpg", "image/png", "application/octet-stream":
+		case "image/jpeg", "image/jpg", "image/png", "image/webp", "application/octet-stream":
 		default:
 			log.Printf("Ignoring response with content-type %q", ct)
 			return nil
