@@ -83,7 +83,7 @@ func run() error {
 			return nil
 		}
 
-		log.Println("Goofified %s in %s", r.Request.URL.Path, time.Since(start).String())
+		log.Printf("Goofified %s in %s", r.Request.URL.Path, time.Since(start).String())
 		r.Header.Set("X-Goofy", "1")
 		r.Header.Set("content-length", strconv.Itoa(len(out)))
 		r.Body = io.NopCloser(bytes.NewReader(out))
