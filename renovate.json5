@@ -1,20 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
-    ":dependencyDashboard",
-    ":semanticCommitsDisabled",
+    "github>nadiamoe/renovate-config",
   ],
- "packageRules": [
-    // Group all GitHub actions updates in the same PR.
-    {
-      "matchManagers": ["github-actions"],
-      "groupName": "github actions",
-    },
-    // Group all Dockerfile updates in the same PR.
-    {
-      "matchManagers": ["docker"],
-      "groupName": "container images",
-    },
- ],
 }
